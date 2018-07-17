@@ -1,0 +1,45 @@
+button {
+    border: 2px solid black;
+}
+
+
+#authorization{
+    width: 500px;
+    position: absolute;
+    margin-left: 50%;
+    margin-left: 250px;
+  
+
+}
+.chat{
+    visibility: hidden;
+    position: absolute;
+    width:500px;
+    height: 600px;
+    border: 2px solid black;
+    margin-left: 50%;
+    margin-left: 300px;
+    
+
+}
+#chat-u{
+    display:flex;
+    flex-direction: row;
+}
+#chat-box{
+    height: 400px;
+    width: 350px;
+    margin-left:20px;
+    overflow: scroll;
+}
+#users{
+    height: 400px;
+    width: 80px;
+    overflow: scroll;
+
+}
+ul {
+    list-style-type:none;
+}
+
+
