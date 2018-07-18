@@ -4,12 +4,14 @@ var io = require('socket.io')(http);
 
 var messages = [];
 var users = [];
+var nicks = ["nickname"];
 
 app.get('/',function(req,res)
 {
     res.sendFile(__dirname + '/index.html');
 
 });
+
 app.get('/style.css',function(req,res)
 {
     res.sendFile(__dirname + '/style.css');
@@ -24,38 +26,88 @@ app.get('/script.js',function(req,res)
 io.on('connection', function(socket){
     socket.on('user data', function(nick){
         users.push(nick);
-        io.emit('user data', nick);
+        var place = users.length;
         
+        io.emit('user data', users);
+        
+        setTimeout(function(){
+            nick.status = "online";
+            users.splice(place,1);
+         
+            
+            io.emit('user data', users);
+                }, 60000);
+     
     });
-    socket.on('newUser',function (username) {
-        socket.username = username;
+    socket.on('validation', function (Nick)
+{   var nope = false;
+    for (i in nicks)
+    {   
+        if (nicks[i] == Nick)
+        {socket.emit('val-', "This Nickname already exist");
+            
+        nope = true;
+        break;}}
+        if (nope == false) {
+        if (Nick.length < 5)
+        {socket.emit('val-', "Too short, Must be 5 symbols or more"); }
+        else if (Nick.length > 12)
+        {socket.emit('val-', "Too long, Must be 12 symbols or less"); }
+        else {
+            {socket.emit('val+', "It`s Ok Welcome!");
+        nicks.push(Nick) }
+        
+        }
+    }
+        
+
+});
+    socket.on('newUser',function (user) {
+        socket.username = user.name;
+        socket.usernick = user.nickname;
+        socket.emit('chat history', messages);
+        
    });
    socket.on('disconnect', function () {
-    var connectionMessage = socket.username + " Disconnected from Chat";
+    var connectionMessage = socket.usernick + " Disconnected from Chat";
      io.emit('disconnected', connectionMessage);
+     for (var user in users)
+     {
+         if (users[user].nickname == socket.usernick)
+
+         { 
+              var place = users.indexOf(users[user]);
+            var updatedUser = users[user];
+            updatedUser.status = "just left"
+            users.splice(place,1,updatedUser);
+            io.emit('user data2', users);
+            setTimeout(function(){
+                updatedUser.status = "offline";
+                
+                users.splice(place,1,updatedUser);
+                io.emit('user data2', users);
+                    }, 60000);
+         }
+     }
+     
+     
   });
     socket.on('chat message', function(msg){
         messages.push(msg);
         io.emit('chat message', msg);
     });
     
-    socket.emit('chat history', messages);
-    socket.emit('users history', users);
+    
+   
     socket.on('disconnect', function () {
         socket.emit('user disconnected');
       });
-    socket.on('just appeared', function(user){
-        setTimeout(function(){
-            socket.emit('online', user);
-            console.log("online")
-                },10000);
-        socket.emit('just',user);
-    
-    });
+      socket.on('typing', function (data) {
+        console.log(data);
+        socket.broadcast.emit('typing', data);
+      });
 
-    socket.on('typing', function(){
-        socket.emit('user typing', socket.username); 
-    });
+      
 });
 
 

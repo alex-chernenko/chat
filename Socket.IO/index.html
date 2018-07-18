@@ -8,18 +8,19 @@
 </head>
 <body>
 <div id="authorization">
-    <h3> </h3>
-    <div><span>Your Name:</span><input id="userName" type="text"></div>
-    <div><span>Nickname:</span> <input id="userNick" type="text"></div>
+    <h3>Welcome!</h3>
+    <div class="form"><span>Your Name:</span><input id="userName" type="text"></div>
+    <div class="form"><span>Nickname:</span> <input id="userNick" type="text"></div>
     <button id="enter">Enter Chat</button>
 </div>
 <div class="chat" id="chat">
-        <h3> This is Chat, really. </h3>
+        <p id="header"> This is <a>Sparta</a> Chat!</p>
        <div id="chat-u">
             <div id="chat-box">
                 <ul id="messages">
                     <li></li>
                 </ul>
+                <div class="typing"></div>
             </div>
             <div id="user-box">
                     <ul id="users">
@@ -28,7 +29,7 @@
             </div>
         </div>
        
-        <div><input id="text" type="text"><button id="submit" class="send">Send</button></div>
+        <div id="sender"><input id="text" type="text"><button id="submit" class="send">Send</button></div>
     </div>
 </body>
 <script src="script.js"></script>
